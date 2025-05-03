@@ -1,0 +1,307 @@
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Font Awesome (íconos) -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<!-- Font Awesome (letras) -->
+<link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&display=swap" rel="stylesheet">
+
+<script src="https://kit.fontawesome.com/a2e0e6a63d.js" crossorigin="anonymous"></script>
+<style>
+    :root {
+        --primario: #007481;
+        --secundario: #48A9A6;
+        --claro: #E4F9F5;
+        --oscuro: #04343d;
+    }
+
+    body {
+        background-color: var(--claro);
+    }
+
+    .search-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.95);
+        z-index: 1055;
+        display: none;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .search-box {
+        width: 80%;
+        max-width: 500px;
+    }
+
+    .navbar-nav .nav-link {
+        cursor: pointer;
+    }
+
+    .wasipet-logo {
+        max-height: 100px;
+    }
+
+    .titulo-seccion {
+        color: var(--oscuro);
+        text-align: center;
+        margin: 2rem 0;
+    }
+
+    .card-producto {
+        border: none;
+        transition: transform 0.2s;
+    }
+
+    .card-producto:hover {
+        transform: scale(1.05);
+    }
+
+    .card {
+        min-width: 250px;
+        margin-right: 1rem;
+    }
+
+    .scrolling-wrapper {
+        overflow-x: auto;
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+    }
+
+    .info-section {
+        background-color: #E4F9F5;
+        padding: 2rem 0;
+    }
+
+    .info-section h3 {
+        color: var(--primario);
+    }
+
+    footer {
+        background-color: #007481;
+        color: white;
+        font-family: 'Amatic SC', cursive;
+        padding: 40px 20px;
+    }
+
+    .footer-text,
+    a {
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+        color: white;
+    }
+
+    .footer-highlight {
+        background-color: #ccc;
+        color: black;
+        padding: 0 4px;
+    }
+</style>
+
+<!-- Header -->
+<header class="bg-white border-bottom py-3">
+    <div class="container d-flex justify-content-between align-items-center">
+
+        <!-- Logo -->
+        <a href="HomePage.html" style="cursor: pointer;"> <img src="Logo_Wasipet2.png" alt="WASIPET"
+                class="wasipet-logo mx-auto d-block"></a>
+
+        <!-- Icons -->
+        <div class="d-flex align-items-center gap-3">
+            <i class="fas fa-search" id="searchToggle" style="cursor: pointer;"></i>
+            <i class="fas fa-user" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#loginModal"></i>
+            <a href="carrito.html" class="btn btn-success position-relative">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="contador-carrito"
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    0
+                </span>
+            </a>
+        </div>
+    </div>
+
+    <!-- buscador -->
+    <div class="container position-relative" id="searchContainer" style="display: none;">
+        <div class="bg-light p-3 rounded shadow position-absolute top-100 start-50 translate-middle-x w-100 z-3"
+            style="max-width: 600px;">
+            <div class="d-flex align-items-center">
+                <input type="text" class="form-control me-2" placeholder="Buscar productos...">
+                <button class="btn btn-outline-secondary" id="closeSearch"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm sticky-top">
+        <div class="container">
+
+            <!-- Botón hamburguesa -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Enlaces -->
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <!-- Productos -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="productosDropdown" role="button"
+                            data-bs-toggle="dropdown">
+                            Productos
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="perros.html">Perros</a></li>
+                            <li><a class="dropdown-item" href="gatos.html">Gatos</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contacto.html">Contacto</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="acerca.html">Acerca de Nosotros</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- Modal Login/Registro -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content p-4">
+            <h5 class="modal-title mb-3">Bienvenido</h5>
+            <form>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Correo</label>
+                    <input type="email" class="form-control" id="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Iniciar sesión</button>
+                <div class="text-center mt-3">
+                    <a href="#">¿No tienes cuenta? Regístrate</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap JS + Script personalizado -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://kit.fontawesome.com/a2e0e6a63d.js" crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const loginForm = document.querySelector('#loginModal form');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+
+        loginForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const email = emailInput.value;
+            const password = passwordInput.value;
+
+            // Usuario simulado
+            const usuarios = [
+                { email: 'admin@wasipet.com', password: '123456', nombre: 'Administrador' },
+                { email: 'cliente@wasipet.com', password: 'wasipet', nombre: 'Cliente' }
+            ];
+
+            const usuario = usuarios.find(u => u.email === email && u.password === password);
+
+            if (usuario) {
+                // Guardar en localStorage que está logueado
+                localStorage.setItem('usuarioLogueado', JSON.stringify(usuario));
+                alert(`Bienvenido, ${usuario.nombre}`);
+                location.reload();
+            } else {
+                alert('Correo o contraseña incorrectos');
+            }
+        });
+
+        // Mostrar el nombre del usuario si está logueado
+        const iconUser = document.querySelector('.fa-user');
+        const usuarioGuardado = JSON.parse(localStorage.getItem('usuarioLogueado'));
+
+        if (usuarioGuardado) {
+            iconUser.title = usuarioGuardado.nombre;
+            iconUser.classList.add('text-success'); // ícono verde para indicar sesión activa
+        }
+
+        // Permitir cerrar sesión al hacer clic
+        iconUser.addEventListener('click', function () {
+            if (usuarioGuardado) {
+                if (confirm('¿Cerrar sesión?')) {
+                    localStorage.removeItem('usuarioLogueado');
+                    location.reload();
+                }
+            }
+        });
+    });
+
+    document.getElementById("searchToggle").addEventListener("click", function () {
+        document.getElementById("searchContainer").style.display = "block";
+    });
+
+    document.getElementById("closeSearch").addEventListener("click", function () {
+        document.getElementById("searchContainer").style.display = "none";
+    });
+
+    // Scroll suave para los enlaces
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                window.scrollTo({
+                    top: target.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    //Carrito 
+    document.addEventListener('DOMContentLoaded', function () {
+        const botones = document.querySelectorAll('.add-to-cart');
+        const contador = document.getElementById('contador-carrito');
+
+        function actualizarContador() {
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            contador.textContent = carrito.length;
+        }
+
+        botones.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const producto = {
+                    id: btn.dataset.id,
+                    nombre: btn.dataset.nombre,
+                    precio: btn.dataset.precio,
+                    imagen: btn.dataset.imagen, // Capturamos la imagen correcta
+                    cantidad: 1  // Inicializamos la cantidad en 1
+                };
+
+                // Obtener carrito actual o crear uno nuevo
+                let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+                // Agregar producto
+                carrito.push(producto);
+                localStorage.setItem('carrito', JSON.stringify(carrito));
+                actualizarContador();
+
+                alert(`${producto.nombre} fue añadido al carrito`);
+            });
+        });
+        actualizarContador();
+
+    });
+</script>

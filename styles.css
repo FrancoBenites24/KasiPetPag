@@ -1,0 +1,92 @@
+:root {
+    --primario: #007481;
+    --secundario: #48A9A6;
+    --claro: #E4F9F5;
+    --oscuro: #04343d;
+}
+
+body {
+    background-color: var(--claro);
+}
+
+.search-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    z-index: 1055;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-box {
+    width: 80%;
+    max-width: 500px;
+}
+
+.navbar-nav .nav-link {
+    cursor: pointer;
+}
+
+.wasipet-logo {
+    max-height: 100px;
+}
+
+.titulo-seccion {
+    color: var(--oscuro);
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.card-producto {
+    border: none;
+    transition: transform 0.2s;
+}
+
+.card-producto:hover {
+    transform: scale(1.05);
+}
+
+.card {
+    min-width: 250px;
+    margin-right: 1rem;
+}
+
+.scrolling-wrapper {
+    overflow-x: auto;
+    display: flex;
+    flex-wrap: nowrap;
+    padding-bottom: 1rem;
+}
+
+.info-section {
+    background-color: #E4F9F5;
+    padding: 2rem 0;
+}
+
+.info-section h3 {
+    color: var(--primario);
+}
+
+footer {
+    background-color: #007481;
+    color: white;
+    font-family: 'Amatic SC', cursive;
+    padding: 40px 20px;
+}
+
+.footer-text,
+a {
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: white;
+}
+
+.footer-highlight {
+    background-color: #ccc;
+    color: black;
+    padding: 0 4px;
+}

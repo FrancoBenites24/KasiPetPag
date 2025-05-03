@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Carrito de Compras</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+        .producto-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+        }
+
+        .total {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .btn-eliminar {
+            color: red;
+            cursor: pointer;
+        }
+
+        #carrito-scroll {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+    <div id="header"></div>
+
+    <div class="container py-5">
+        <h2 class="mb-4">Carrito de Compras</h2>
+        <div id="carrito-scroll">
+            <div id="carrito-container"></div>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-end">
+            <span class="total">Total: S/ <span id="total">0.00</span></span>
+        </div>
+
+        <div class="text-end mt-4">
+            <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#modalPago">
+                Ir al Pago <i class="fas fa-credit-card ms-2"></i>
+            </button>
+        </div>
+
+        <!-- MODAL DE PAGO -->
+        <div class="modal fade" id="modalPago" tabindex="-1" aria-labelledby="modalPagoLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalPagoLabel">Métodos de Pago</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Aceptamos los siguientes métodos de pago:</p>
+                        <ul>
+                            <li>💳 Tarjeta de crédito o débito (Visa, Mastercard)</li>
+                            <li>📱 Yape o Plin</li>
+                            <li>🏦 Transferencia bancaria (BCP, Interbank)</li>
+                        </ul>
+                        <p>Total a pagar: <strong>S/ <span id="montoTotal">0.00</span></strong></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success" id="btnHacerPago">Hacer el Pago</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        //header y footer
+        window.addEventListener('DOMContentLoaded', () => {
+            fetch('header.html')
+                .then(res => res.text())
+                .then(data => document.getElementById('header').innerHTML = data);
+
+            fetch('footer.html')
+                .then(res => res.text())
+                .then(data => document.getElementById('footer').innerHTML = data);
+        });
+
+        function cargarCarrito() {
+            let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+
+            // Agrupar productos por ID
+            const productosAgrupados = {};
+            carrito.forEach(item => {
+                if (productosAgrupados[item.id]) {
+                    productosAgrupados[item.id].cantidad += item.cantidad;
+                } else {
+                    productosAgrupados[item.id] = { ...item };
+                }
+            });
+
+            const container = document.getElementById("carrito-container");
+            const totalElement = document.getElementById("total");
+            container.innerHTML = "";
+            let total = 0;
+
+            const productos = Object.values(productosAgrupados);
+
+            if (productos.length === 0) {
+                container.innerHTML = `<p class="text-center">Tu carrito está vacío.</p>`;
+                totalElement.textContent = "0.00";
+                return;
+            }
+
+            productos.forEach((item, index) => {
+                const subtotal = parseFloat(item.precio) * item.cantidad;
+                total += subtotal;
+
+                const card = document.createElement("div");
+                card.className = "card mb-3";
+                card.innerHTML = `
+          <div class="row g-0 align-items-center p-3">
+            <div class="col-md-2 text-center">
+              <img src="${item.imagen}" alt="${item.nombre}" class="producto-img rounded">
+            </div>
+            <div class="col-md-4">
+              <h5>${item.nombre}</h5>
+              <p class="mb-0 text-muted">Precio: S/ ${parseFloat(item.precio).toFixed(2)}</p>
+            </div>
+            <div class="col-md-2">
+              <input type="number" min="1" value="${item.cantidad}" class="form-control cantidad-input" data-id="${item.id}">
+            </div>
+            <div class="col-md-2 text-center">
+              <span class="subtotal">S/ ${subtotal.toFixed(2)}</span>
+            </div>
+            <div class="col-md-2 text-end">
+              <span class="btn-eliminar" data-id="${item.id}">&times;</span>
+            </div>
+          </div>
+        `;
+                container.appendChild(card);
+            });
+
+            totalElement.textContent = total.toFixed(2);
+            actualizarTotalModal(total);  // Actualizar el total en el modal
+            agregarEventosCantidad(productos);
+            agregarEventosEliminar(productos);
+        }
+
+        // Actualizar el total en el modal
+        function actualizarTotalModal(total) {
+            document.getElementById("montoTotal").innerText = total.toFixed(2);
+        }
+
+        function agregarEventosCantidad(productos) {
+            const inputs = document.querySelectorAll(".cantidad-input");
+            inputs.forEach(input => {
+                input.addEventListener("change", () => {
+                    const id = input.dataset.id;
+                    const nuevaCantidad = parseInt(input.value) || 1;
+
+                    // Actualizar en el localStorage
+                    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+                    carrito = carrito.map(p => {
+                        if (p.id === id) {
+                            return { ...p, cantidad: nuevaCantidad };
+                        }
+                        return p;
+                    });
+
+                    localStorage.setItem("carrito", JSON.stringify(carrito));
+                    cargarCarrito();
+                });
+            });
+        }
+
+        function agregarEventosEliminar(productos) {
+            const botonesEliminar = document.querySelectorAll(".btn-eliminar");
+            botonesEliminar.forEach(boton => {
+                boton.addEventListener("click", () => {
+                    const id = boton.dataset.id;
+
+                    // Eliminar todos los elementos con ese ID
+                    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+                    carrito = carrito.filter(item => item.id !== id);
+                    localStorage.setItem("carrito", JSON.stringify(carrito));
+                    cargarCarrito();
+                });
+            });
+        }
+
+        cargarCarrito();
+
+        document.getElementById("btnHacerPago").addEventListener("click", function () {
+            // Vaciar el carrito en localStorage
+            localStorage.removeItem("carrito");
+
+            // Mostrar la alerta de pago exitoso
+            alert("✅ PAGO EXITOSO\n¡Gracias por tu compra!");
+
+            // Cierra el modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('modalPago'));
+            modal.hide();
+
+            // Recargar la página para actualizar el carrito
+            cargarCarrito();
+        });
+
+        // Si manejas el total del carrito, actualiza el monto:
+        document.addEventListener("DOMContentLoaded", () => {
+            const monto = localStorage.getItem('total') || '0.00';
+            document.getElementById("montoTotal").innerText = parseFloat(monto).toFixed(2);
+        });
+    </script>
+    <div id="footer"></div>
+
+</body>
+
+</html>
