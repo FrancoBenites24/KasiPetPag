@@ -192,15 +192,59 @@
     <script>
         //header y footer
         window.addEventListener('DOMContentLoaded', () => {
-            fetch('header.html')
-                .then(res => res.text())
-                .then(data => document.getElementById('header').innerHTML = data);
-
             fetch('footer.html')
                 .then(res => res.text())
                 .then(data => document.getElementById('footer').innerHTML = data);
         });
+document.addEventListener('DOMContentLoaded', function () {
+            const loginForm = document.querySelector('#loginModal form');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
 
+            loginForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const email = emailInput.value;
+                const password = passwordInput.value;
+
+                // Usuario simulado
+                const usuarios = [
+                    { email: 'admin@wasipet.com', password: '123456', nombre: 'Administrador' },
+                    { email: 'cliente@wasipet.com', password: 'wasipet', nombre: 'Cliente' }
+                ];
+
+                const usuario = usuarios.find(u => u.email === email && u.password === password);
+
+                if (usuario) {
+                    // Guardar en localStorage que está logueado
+                    localStorage.setItem('usuarioLogueado', JSON.stringify(usuario));
+                    alert(`Bienvenido, ${usuario.nombre}`);
+                    location.reload();
+                } else {
+                    alert('Correo o contraseña incorrectos');
+                }
+            });
+
+            // Mostrar el nombre del usuario si está logueado
+            const iconUser = document.querySelector('.fa-user');
+            const usuarioGuardado = JSON.parse(localStorage.getItem('usuarioLogueado'));
+
+            if (usuarioGuardado) {
+                iconUser.title = usuarioGuardado.nombre;
+                iconUser.classList.add('text-success'); // ícono verde para indicar sesión activa
+            }
+
+            // Permitir cerrar sesión al hacer clic
+            iconUser.addEventListener('click', function () {
+                if (usuarioGuardado) {
+                    if (confirm('¿Cerrar sesión?')) {
+                        localStorage.removeItem('usuarioLogueado');
+                        location.reload();
+                    }
+                }
+            });
+        });
+        
         function cargarCarrito() {
             let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
