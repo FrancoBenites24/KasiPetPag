@@ -1,17 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - Kasipet</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Bootstrap CSS -->
+    <title>Checkout | WASIPET</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap y fuentes -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome (íconos) -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-    <!-- Font Awesome (letras) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -22,59 +17,135 @@
         }
 
         body {
-            background-color: var(--claro);
+            background: linear-gradient(135deg, var(--claro), #fff 90%);
+            font-family: 'Inter', Arial, sans-serif;
+            min-height: 100vh;
         }
 
-        .search-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            z-index: 1055;
-            display: none;
+        .card-3d {
+            background: white;
+            border: none;
+            border-radius: 2rem;
+            box-shadow: 0 8px 32px 0 rgba(4, 52, 61, 0.14), 0 1.5px 6px var(--primario);
+            transition: transform 0.25s cubic-bezier(.4,2,.3,1), box-shadow 0.2s;
+            transform: perspective(700px) rotateY(-3deg) scale(1.01);
+            overflow: hidden;
+            position: relative;
+        }
+        .card-3d:hover {
+            transform: perspective(700px) rotateY(1deg) scale(1.04);
+            box-shadow: 0 16px 48px 0 rgba(4, 52, 61, 0.18), 0 4px 16px var(--secundario);
+            z-index: 2;
+        }
+        .card-header {
+            background: var(--primario) !important;
+            color: #fff;
+            border-radius: 2rem 2rem 0 0;
+            font-family: 'Amatic SC', cursive;
+            letter-spacing: 1px;
+            font-size: 2rem;
+            border: none;
+            text-align: center;
+        }
+        .resumen-item {
+            border-bottom: 1px dashed var(--secundario);
+            padding: 0.7rem 0;
+            display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 1rem;
+        }
+        .resumen-img {
+            width: 52px;
+            height: 52px;
+            border-radius: 1rem;
+            object-fit: cover;
+            border: 2px solid var(--secundario);
+            box-shadow: 0 2px 8px rgba(72, 169, 166, 0.12);
+        }
+        .resumen-nombre {
+            font-weight: 600;
+            color: var(--primario);
+        }
+        .resumen-cantidad {
+            font-size: 1rem;
+            color: var(--oscuro);
+            font-weight: 500;
+        }
+        .resumen-precio {
+            font-size: 1.02rem;
+            color: var(--secundario);
+            font-weight: 500;
+        }
+        .resumen-subtotal {
+            margin-left: auto;
+            font-size: 1.04rem;
+            font-weight: bold;
+            color: var(--oscuro);
+        }
+        .producto-img {
+            width: 56px !important;
+            height: 56px !important;
+            object-fit: cover !important;
+            border-radius: 0.7rem !important;
+            border: 2px solid var(--secundario);
+            background: #f8f8f8;
+            box-shadow: 0 1.5px 6px rgba(0,0,0,0.08);
+            display: block;
         }
 
-        .search-box {
-            width: 80%;
-            max-width: 500px;
+        .card-footer {
+            background: var(--claro);
+            border-top: none;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 0 0 2rem 2rem;
+            text-align: end;
         }
-
-        .navbar-nav .nav-link {
-            cursor: pointer;
-        }
-
-        .wasipet-logo {
-            max-height: 100px;
-        }
-
-
         .btn-primary {
             background-color: var(--primario);
-            border-color: var(--primario);
+            border: none;
+            box-shadow: 0 2px 8px 0 rgba(4, 52, 61, 0.08);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border-radius: 1rem;
         }
-
-        .btn-primary:hover {
+        .btn-primary:hover, .btn-primary:focus {
             background-color: var(--oscuro);
+            color: #fff;
         }
-
+        /* Formulario */
+        .form-label {
+            color: var(--primario);
+            font-weight: 500;
+        }
+        .form-control, .form-select {
+            border-radius: 1rem;
+            border: 1.3px solid var(--secundario);
+            box-shadow: none;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primario);
+            box-shadow: 0 0 0 2px var(--secundario);
+        }
+        .btn-primary, .btn-success {
+            transition: transform 0.18s cubic-bezier(.38,1.15,.3,1), box-shadow 0.18s;
+            will-change: transform;
+        }
+        .btn-primary:active, .btn-success:active {
+            transform: scale(0.97) perspective(150px) translateZ(10px);
+        }
+        .wasipet-logo { max-height: 100px; }
         footer {
             background-color: #007481;
             color: white;
             font-family: 'Amatic SC', cursive;
             padding: 40px 20px;
         }
-
-        .footer-text,
-        a {
+        .footer-text, a {
             font-family: 'Courier New', monospace;
             font-size: 14px;
             color: white;
         }
-
         .footer-highlight {
             background-color: #ccc;
             color: black;
@@ -82,31 +153,25 @@
         }
     </style>
 </head>
-
 <body>
     <!-- Header -->
     <header class="bg-white border-bottom py-3">
         <div class="container d-flex justify-content-between align-items-center">
-
-            <!-- Logo -->
-            <a href="index.html" style="cursor: pointer;"> <img src="Logo_Wasipet2.png" alt="WASIPET"
-                    class="wasipet-logo mx-auto d-block"></a>
-
-            <!-- Icons -->
+            <a href="index.html" style="cursor: pointer;">
+                <img src="Logo_Wasipet2.png" alt="WASIPET" class="wasipet-logo mx-auto d-block">
+            </a>
             <div class="d-flex align-items-center gap-3">
                 <i class="fas fa-search" id="searchToggle" style="cursor: pointer;"></i>
                 <i class="fas fa-user" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#loginModal"></i>
                 <a href="carrito.html" class="btn btn-success position-relative">
                     <i class="fas fa-shopping-cart"></i>
                     <span id="contador-carrito"
-                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         0
                     </span>
                 </a>
             </div>
         </div>
-
-        <!-- buscador -->
         <div class="container position-relative" id="searchContainer" style="display: none;">
             <div class="bg-light p-3 rounded shadow position-absolute top-100 start-50 translate-middle-x w-100 z-3"
                 style="max-width: 600px;">
@@ -116,20 +181,13 @@
                 </div>
             </div>
         </div>
-
-        <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm sticky-top">
             <div class="container">
-
-                <!-- Botón hamburguesa -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
-                <!-- Enlaces -->
                 <div class="collapse navbar-collapse" id="navbarContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <!-- Productos -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="productosDropdown" role="button"
                                 data-bs-toggle="dropdown">
@@ -176,49 +234,46 @@
     </div>
 
     <div class="container py-5">
-        <h2 class="text-center mb-4">Finaliza tu Compra</h2>
-
-        <div class="row g-4">
-            <!-- Resumen del Pedido -->
+        <h2 class="text-center mb-5 fw-bold" style="color:var(--oscuro);font-family:'Amatic SC', cursive;font-size:3rem;">Finaliza tu compra</h2>
+        <div class="row g-5 align-items-start">
+            <!-- Resumen del pedido -->
             <div class="col-md-6">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-primario text-white">
-                        <h5 class="mb-0">Resumen del Pedido</h5>
+                <div class="card card-3d mb-4">
+                    <div class="card-header">
+                        <i class="bi bi-bag-check-fill me-2"></i> Resumen del Pedido
                     </div>
                     <div class="card-body" id="resumen-pedido">
-                        <!-- Aquí se insertarán los productos desde JS -->
+                        <!-- Aquí van los productos -->
                     </div>
-                    <div class="card-footer text-end">
-                        <h5>Total: S/ <span id="total-pedido">0.00</span></h5>
+                    <div class="card-footer">
+                        Total: S/ <span id="total-pedido">0.00</span>
                     </div>
                 </div>
             </div>
-
-            <!-- Formulario y Métodos de Pago -->
+            <!-- Formulario -->
             <div class="col-md-6">
-                <div class="card shadow-sm">
+                <div class="card card-3d">
                     <div class="card-body">
-                        <h5 class="mb-3">Tus Datos</h5>
-<form id="formCheckout">
-    <div class="mb-3">
-        <label for="nombre" class="form-label">Nombre completo</label>
-        <input type="text" class="form-control" id="nombre" required>
-    </div>
-    <div class="mb-3">
-        <label for="correo" class="form-label">Correo Electrónico</label>
-        <input type="email" class="form-control" id="correo" placeholder="tucorreo@ejemplo.com" required>
-    </div>
-    <div class="mb-3">
-        <label for="telefono" class="form-label">Teléfono</label>
-        <input type="tel" class="form-control" id="telefono" required>
-    </div>
-    <div class="mb-3">
-        <label for="direccion" class="form-label">Dirección</label>
-        <input type="text" class="form-control" id="direccion" required>
-    </div>
-
-                            <h5 class="mb-3">Método de Pago</h5>
-                            <select class="form-select mb-3" id="metodo-pago" required>
+                        <form id="formCheckout">
+                            <h5 class="mb-4 fw-bold" style="color:var(--primario)">Tus Datos</h5>
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre completo</label>
+                                <input type="text" class="form-control" id="nombre" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="correo" class="form-label">Correo electrónico</label>
+                                <input type="email" class="form-control" id="correo" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="telefono" class="form-label">Teléfono</label>
+                                <input type="tel" class="form-control" id="telefono" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="direccion" class="form-label">Dirección</label>
+                                <input type="text" class="form-control" id="direccion" required>
+                            </div>
+                            <h5 class="mb-3 fw-bold" style="color:var(--primario)">Método de Pago</h5>
+                            <select class="form-select mb-4" id="metodo-pago" required>
                                 <option value="">Selecciona una opción</option>
                                 <option value="tarjeta">Tarjeta de crédito / débito</option>
                                 <option value="yape">Yape</option>
@@ -227,39 +282,35 @@
                                 <option value="efectivo">Pago en Efectivo</option>
                                 <option value="whatsapp">Pago por WhatsApp</option>
                             </select>
-                            <div id="extraInfo" class="extra-info"></div>
                             <div class="text-end">
-                                <button type="submit" class="btn btn-primary">Finalizar Pedido <i
-                                        class="bi bi-check-circle ms-2"></i></button>
+                                <button type="submit" class="btn btn-primary px-4 py-2">
+                                    Finalizar Pedido <i class="bi bi-arrow-right-circle ms-1"></i>
+                                </button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Confirmación -->
-        <div class="modal fade" id="confirmacionModal" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-body text-center py-5">
-                        <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
-                        <h4 class="mt-3">¡Pedido realizado con éxito!</h4>
-                        <p class="text-muted">Hemos recibido tu pedido. Puedes revisar los detalles a continuación.</p>
-                        <div id="detalle-confirmacion" class="text-start mt-3"></div>
-                        <button class="btn btn-primary mt-4" data-bs-dismiss="modal">Aceptar</button>
-                    </div>
+    </div>
+    <!-- Modal Confirmación -->
+    <div class="modal fade" id="confirmacionModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center py-5">
+                    <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                    <h4 class="mt-3">¡Pedido realizado con éxito!</h4>
+                    <p class="text-muted">Hemos recibido tu pedido.</p>
+                    <div id="detalle-confirmacion" class="text-start mt-3"></div>
+                    <button class="btn btn-primary mt-4" data-bs-dismiss="modal">Aceptar</button>
                 </div>
             </div>
         </div>
-
     </div>
-
     <!-- Footer -->
     <div>
         <img src="https://cdn.shopify.com/s/files/1/0648/5137/8427/files/footer-pets-trans-naturo.png?v=1657827618"
             alt="" class="img-fluid d-block mx-auto">
-
         <footer>
             <div class="text-center mb-4">
                 <h2 class="fs-1">10% OFF EN TU PRIMERA COMPRA</h2>
@@ -270,9 +321,7 @@
                     <button class="btn btn-danger">REGISTRAR</button>
                 </form>
             </div>
-
             <hr class="border-white">
-
             <div class="container text-start">
                 <div class="row gy-4">
                     <div class="col-md-3">
@@ -285,7 +334,6 @@
                             <span class="footer-highlight">NECESIDADES NUTRICIONALES</span> de su mascota.
                         </p>
                     </div>
-
                     <div class="col-md-3">
                         <h5 class="mb-3">ATENCIÓN AL CLIENTE</h5>
                         <ul class="list-unstyled footer-text">
@@ -294,7 +342,6 @@
                             <a href="contacto.html">Contacto</a>
                         </ul>
                     </div>
-
                     <div class="col-md-3">
                         <h5 class="mb-3">LEGAL</h5>
                         <ul class="list-unstyled footer-text">
@@ -302,7 +349,6 @@
                             <a href="PoliticaDePrivacidad.html">Política de privacidad</a>
                         </ul>
                     </div>
-
                     <div class="col-md-3">
                         <h5 class="mb-3">SÍGUENOS</h5>
                         <div class="d-flex align-items-center gap-3">
@@ -315,113 +361,186 @@
             </div>
         </footer>
     </div>
+    <!-- Bootstrap Bundle JS (necesario para el modal) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Font Awesome (para los íconos en el header) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+<script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+</script>
+<script type="text/javascript">
+(function(){
+    emailjs.init("4X2XULHo47DGKIvmv");
+})();
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+document.addEventListener("DOMContentLoaded", () => {
+    // Elementos
+    const resumen = document.getElementById("resumen-pedido");
+    const totalSpan = document.getElementById("total-pedido");
+    const form = document.getElementById("formCheckout");
+    const detalleConfirmacion = document.getElementById("detalle-confirmacion");
 
-    <script src="https://cdn.emailjs.com/sdk/3.2/email.min.js"></script>
-    <script>
-        (function(){
-            emailjs.init("4X2XULHo47DGKIvmv");
-        })();
-
-        document.addEventListener("DOMContentLoaded", () => {
-            const resumen = document.getElementById("resumen-pedido");
-            const totalSpan = document.getElementById("total-pedido");
-            const form = document.getElementById("formCheckout");
-            const detalleConfirmacion = document.getElementById("detalle-confirmacion");
-            
-            // Intentar obtener carrito desde localStorage
-            let carrito = [];
-            try {
-                carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-            } catch (error) {
-                console.error("Error al parsear carrito desde localStorage:", error);
-                carrito = [];
-            }
-            let total = 0;
-
-            if (!carrito || carrito.length === 0) {
-                resumen.innerHTML = '<p class="text-muted">Tu carrito está vacío.</p>';
+    // --------- FUNCIÓN PARA OBTENER PRODUCTOS Y TOTAL AGRUPADOS ---------
+    function obtenerProductosYTotal() {
+        let carrito = [];
+        try {
+            carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+        } catch (error) {
+            carrito = [];
+        }
+        console.log('Carrito desde localStorage:', carrito);
+        const productosAgrupados = {};
+        carrito.forEach(item => {
+            if (productosAgrupados[item.id]) {
+                productosAgrupados[item.id].cantidad += item.cantidad;
             } else {
-                resumen.innerHTML = ''; // Limpiar antes de insertar
-                // Revisar estructura de carrito para debug
-                console.log("Carrito desde localStorage:", carrito);
-                // Agrupar productos por id para evitar duplicados (igual que en carrito.html)
-                const productosAgrupados = {};
-                carrito.forEach(item => {
-                    if(productosAgrupados[item.id]){
-                        productosAgrupados[item.id].cantidad += item.cantidad;
-                    } else {
-                        productosAgrupados[item.id] = {...item};
-                    }
-                });
-                const productos = Object.values(productosAgrupados);
-                productos.forEach(p => {
-                    // Revisar propiedades de cada producto para debug
-                    console.log("Producto en carrito agrupado:", p);
-                    if(p && p.nombre && p.cantidad && p.precio){
-                        const subtotal = p.cantidad * parseFloat(p.precio);
-                        total += subtotal;
-                        resumen.innerHTML += `
-                <div class="d-flex justify-content-between mb-2">
-                  <span>${p.nombre} x${p.cantidad}</span>
-                  <span>S/ ${subtotal.toFixed(2)}</span>
-                </div>`;
-                    }
-                });
-                totalSpan.textContent = total.toFixed(2);
+                productosAgrupados[item.id] = {...item};
             }
+        });
+        const productos = Object.values(productosAgrupados);
+        let total = 0;
+        productos.forEach(p => {
+            total += p.cantidad * parseFloat(p.precio);
+        });
+        return { productos, total };
+    }
 
-            form.addEventListener("submit", e => {
-                e.preventDefault();
+    // --------- MOSTRAR RESUMEN DE PEDIDO ---------
+    function mostrarResumen() {
+        const { productos, total } = obtenerProductosYTotal();
+        console.log('Productos a mostrar en resumen:', productos);
+        resumen.innerHTML = '';
+        if (!productos || productos.length === 0) {
+            resumen.innerHTML = '<p class="text-muted">Tu carrito está vacío.</p>';
+            totalSpan.textContent = '0.00';
+            return;
+        }
+        productos.forEach(p => {
+            if(p && p.nombre && p.cantidad && p.precio){
+                const subtotal = p.cantidad * parseFloat(p.precio);
+                const card = document.createElement('div');
+                card.className = 'card mb-3';
+                const row = document.createElement('div');
+                row.className = 'row g-0 align-items-center p-3';
+                const colImg = document.createElement('div');
+                colImg.className = 'col-md-2 text-center';
+                const img = document.createElement('img');
+                img.src = p.imagen;
+                img.alt = p.nombre;
+                img.className = 'producto-img rounded';
+                colImg.appendChild(img);
+                const colName = document.createElement('div');
+                colName.className = 'col-md-4';
+                const h5 = document.createElement('h5');
+                h5.textContent = p.nombre;
+                const pPrice = document.createElement('p');
+                pPrice.className = 'mb-0 text-muted';
+                pPrice.textContent = `Precio: S/ ${parseFloat(p.precio).toFixed(2)}`;
+                colName.appendChild(h5);
+                colName.appendChild(pPrice);
+                const colQty = document.createElement('div');
+                colQty.className = 'col-md-2 text-center';
+                colQty.textContent = `Cantidad: ${p.cantidad}`;
+                const colSubtotal = document.createElement('div');
+                colSubtotal.className = 'col-md-2 text-center';
+                colSubtotal.textContent = `Subtotal: S/ ${subtotal.toFixed(2)}`;
+                row.appendChild(colImg);
+                row.appendChild(colName);
+                row.appendChild(colQty);
+                row.appendChild(colSubtotal);
+                card.appendChild(row);
+                resumen.appendChild(card);
+            }
+        });
+        totalSpan.textContent = total.toFixed(2);
+    }
 
-                const nombre = document.getElementById("nombre").value;
-                const correo = document.getElementById("correo").value;
-                const telefono = document.getElementById("telefono").value;
-                const direccion = document.getElementById("direccion").value;
-                const metodo = document.getElementById("metodo-pago").value;
+    // --------- SUBMIT FORM ---------
+    form.addEventListener("submit", e => {
+        e.preventDefault();
+        const { productos, total } = obtenerProductosYTotal();
 
-                // Construir detalles del pedido para el correo
-                let orderDetailsHTML = '';
-                carrito.forEach(product => {
-                    const subtotal = product.cantidad * parseFloat(product.precio);
-                    orderDetailsHTML += `<p>${product.nombre} x${product.cantidad} - S/ ${subtotal.toFixed(2)}</p>`;
-                });
+        if (productos.length === 0) {
+            alert('El carrito está vacío.');
+            return;
+        }
 
-                // Mostrar datos en modal
+        const nombre = document.getElementById("nombre").value;
+        const correo = document.getElementById("correo").value;
+        const telefono = document.getElementById("telefono").value;
+        const direccion = document.getElementById("direccion").value;
+        const metodo = document.getElementById("metodo-pago").value;
+
+        let orderDetailsHTML = '';
+        productos.forEach(product => {
+            const subtotal = product.cantidad * parseFloat(product.precio);
+            orderDetailsHTML += `<p>${product.nombre} x${product.cantidad} - S/ ${subtotal.toFixed(2)}</p>`;
+        });
+
+        // Generar order_id único
+        const now = new Date();
+        const order_id = 'WASI' +
+          now.getFullYear().toString().slice(2) +
+          (now.getMonth() + 1).toString().padStart(2, '0') +
+          now.getDate().toString().padStart(2, '0') + '-' +
+          now.getHours().toString().padStart(2, '0') +
+          now.getMinutes().toString().padStart(2, '0') +
+          now.getSeconds().toString().padStart(2, '0');
+
+        // Feedback visual
+        const btn = form.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.innerHTML = 'Enviando... <span class="spinner-border spinner-border-sm"></span>';
+
+        // Parámetros para EmailJS
+        const templateParams = {
+            to_email: correo,
+            to_name: nombre,
+            order_details: orderDetailsHTML,
+            order_total: total.toFixed(2),
+            phone: telefono,
+            address: direccion,
+            payment_method: metodo.charAt(0).toUpperCase() + metodo.slice(1),
+            order_id: order_id
+        };
+
+        // Enviar correo
+        emailjs.send('service_uljb9hj', 'template_mrm41z6', templateParams)
+            .then(function(response) {
+                btn.disabled = false;
+                btn.innerHTML = 'Finalizar Pedido <i class="bi bi-arrow-right-circle ms-1"></i>';
                 detalleConfirmacion.innerHTML = `
-          <p><strong>Nombre:</strong> ${nombre}</p>
-          <p><strong>Teléfono:</strong> ${telefono}</p>
-          <p><strong>Dirección:</strong> ${direccion}</p>
-          <p><strong>Método de pago:</strong> ${metodo.charAt(0).toUpperCase() + metodo.slice(1)}</p>
-          <p><strong>Total:</strong> S/ ${total.toFixed(2)}</p>
-        `;
-
-                // Parámetros para EmailJS
-                const templateParams = {
-                    to_email: correo,
-                    to_name: nombre,
-                    order_details: orderDetailsHTML,
-                    order_total: total.toFixed(2)
-                };
-
-                // Enviar correo con EmailJS
-                emailjs.send('service_uljb9hj', 'template_mrm41z6', templateParams)
-                .then(function(response) {
-                    console.log('Correo enviado con éxito!', response.status, response.text);
-                }, function(error) {
-                    console.error('Error al enviar correo...', error);
-                });
-
+                    <p><strong>Pedido N°:</strong> ${order_id}</p>
+                    <p><strong>Nombre:</strong> ${nombre}</p>
+                    <p><strong>Teléfono:</strong> ${telefono}</p>
+                    <p><strong>Dirección:</strong> ${direccion}</p>
+                    <p><strong>Método de pago:</strong> ${metodo.charAt(0).toUpperCase() + metodo.slice(1)}</p>
+                    <p><strong>Total:</strong> S/ ${total.toFixed(2)}</p>
+                `;
                 const modal = new bootstrap.Modal(document.getElementById("confirmacionModal"));
                 modal.show();
-
                 localStorage.removeItem("carrito");
+                if (typeof actualizarContadorCarrito === "function") {
+                    actualizarContadorCarrito();
+                } else {
+                    const contador = document.getElementById("contador-carrito");
+                    if (contador) contador.textContent = "0";
+                }
+                mostrarResumen(); // Refresca el resumen a vacío
+            })
+            .catch(function(error) {
+                btn.disabled = false;
+                btn.innerHTML = 'Finalizar Pedido <i class="bi bi-arrow-right-circle ms-1"></i>';
+                alert("Ocurrió un problema al enviar el correo de confirmación. Por favor, inténtalo de nuevo.");
+                console.error('Error EmailJS:', error);
             });
-        });
-    </script>
-</body>
+    });
 
+    // --------- AL CARGAR, SIEMPRE MUESTRA EL RESUMEN ---------
+    mostrarResumen();
+});
+</script>
+
+
+</body>
 </html>
