@@ -338,6 +338,7 @@
             if (carrito.length === 0) {
                 resumen.innerHTML = '<p class="text-muted">Tu carrito está vacío.</p>';
             } else {
+                resumen.innerHTML = ''; // Limpiar antes de insertar
                 carrito.forEach(p => {
                     const subtotal = p.cantidad * parseFloat(p.precio);
                     total += subtotal;
