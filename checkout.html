@@ -199,19 +199,23 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h5 class="mb-3">Tus Datos</h5>
-                        <form id="formCheckout">
-                            <div class="mb-3">
-                                <label for="nombre" class="form-label">Nombre completo</label>
-                                <input type="text" class="form-control" id="nombre" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="telefono" class="form-label">Teléfono</label>
-                                <input type="tel" class="form-control" id="telefono" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="direccion" class="form-label">Dirección</label>
-                                <input type="text" class="form-control" id="direccion" required>
-                            </div>
+<form id="formCheckout">
+    <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre completo</label>
+        <input type="text" class="form-control" id="nombre" required>
+    </div>
+    <div class="mb-3">
+        <label for="correo" class="form-label">Correo Electrónico</label>
+        <input type="email" class="form-control" id="correo" placeholder="tucorreo@ejemplo.com" required>
+    </div>
+    <div class="mb-3">
+        <label for="telefono" class="form-label">Teléfono</label>
+        <input type="tel" class="form-control" id="telefono" required>
+    </div>
+    <div class="mb-3">
+        <label for="direccion" class="form-label">Dirección</label>
+        <input type="text" class="form-control" id="direccion" required>
+    </div>
 
                             <h5 class="mb-3">Método de Pago</h5>
                             <select class="form-select mb-3" id="metodo-pago" required>
@@ -316,7 +320,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    <script src="https://cdn.emailjs.com/sdk/3.2/email.min.js"></script>
     <script>
+        (function(){
+            emailjs.init("YOUR_PUBLIC_KEY_HERE");
+        })();
+
         document.addEventListener("DOMContentLoaded", () => {
             const resumen = document.getElementById("resumen-pedido");
             const totalSpan = document.getElementById("total-pedido");
@@ -345,9 +354,17 @@
                 e.preventDefault();
 
                 const nombre = document.getElementById("nombre").value;
+                const correo = document.getElementById("correo").value;
                 const telefono = document.getElementById("telefono").value;
                 const direccion = document.getElementById("direccion").value;
                 const metodo = document.getElementById("metodo-pago").value;
+
+                // Construir detalles del pedido para el correo
+                let orderDetailsHTML = '';
+                carrito.forEach(product => {
+                    const subtotal = product.cantidad * parseFloat(product.precio);
+                    orderDetailsHTML += `<p>${product.nombre} x${product.cantidad} - S/ ${subtotal.toFixed(2)}</p>`;
+                });
 
                 // Mostrar datos en modal
                 detalleConfirmacion.innerHTML = `
@@ -357,6 +374,22 @@
           <p><strong>Método de pago:</strong> ${metodo.charAt(0).toUpperCase() + metodo.slice(1)}</p>
           <p><strong>Total:</strong> S/ ${total.toFixed(2)}</p>
         `;
+
+                // Parámetros para EmailJS
+                const templateParams = {
+                    to_email: correo,
+                    to_name: nombre,
+                    order_details: orderDetailsHTML,
+                    order_total: total.toFixed(2)
+                };
+
+                // Enviar correo con EmailJS
+                emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+                .then(function(response) {
+                    console.log('Correo enviado con éxito!', response.status, response.text);
+                }, function(error) {
+                    console.error('Error al enviar correo...', error);
+                });
 
                 const modal = new bootstrap.Modal(document.getElementById("confirmacionModal"));
                 modal.show();
