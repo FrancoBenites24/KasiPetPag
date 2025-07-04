@@ -1,91 +1,171 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
-    <title>Carrito de Compras</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-
-    <link rel="stylesheet" href="styles.css" />
+    <title>Carrito de Compras | WASIPET</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap y fuentes -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primario: #007481;
             --secundario: #48A9A6;
             --claro: #E4F9F5;
             --oscuro: #04343d;
+            --danger: #ef5350;
         }
-
         body {
-            background-color: var(--claro);
+            background: linear-gradient(120deg, var(--claro), #fff 80%);
+            font-family: 'Inter', Arial, sans-serif;
         }
+        .wasipet-logo { max-height: 100px; }
 
-        .search-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            z-index: 1055;
-            display: none;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .search-box {
-            width: 80%;
-            max-width: 500px;
-        }
-
-        .navbar-nav .nav-link {
-            cursor: pointer;
-        }
-
-        .wasipet-logo {
-            max-height: 100px;
-        }
-
-        .titulo-seccion {
+        .cart-title {
+            font-family: 'Amatic SC', cursive;
             color: var(--oscuro);
+            font-size: 2.8rem;
             text-align: center;
-            margin: 2rem 0;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            letter-spacing: 1px;
         }
-        
-        .producto-img {
-            width: 80px;
-            height: 80px;
+        .cart-3d {
+            background: #fff;
+            border: none;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 32px 0 rgba(4,52,61,0.12), 0 1.5px 6px var(--primario);
+            transition: transform 0.23s cubic-bezier(.4,2,.3,1), box-shadow 0.18s;
+            transform: perspective(700px) rotateY(-2deg) scale(1.008);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            position: relative;
+            animation: fadeInCard 0.5s;
+        }
+        .cart-3d.removing {
+            animation: removeCard .5s forwards;
+        }
+        @keyframes removeCard {
+            to { opacity: 0; transform: translateX(50%) scale(0.93) rotateY(10deg);}
+        }
+        @keyframes fadeInCard {
+            from { opacity: 0; transform: translateY(30px) scale(.98);}
+            to   { opacity: 1; transform: none;}
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px dashed var(--secundario);
+        }
+        .cart-item:last-child { border-bottom: none; }
+        .cart-img {
+            width: 64px;
+            height: 64px;
             object-fit: cover;
+            border-radius: 1rem;
+            border: 2px solid var(--secundario);
+            box-shadow: 0 2px 8px rgba(72,169,166,0.10);
         }
-
-        .total {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #28a745;
+        .cart-name {
+            font-weight: 600;
+            color: var(--primario);
+            font-size: 1.08rem;
         }
-
-        .btn-eliminar {
-            color: red;
+        .cart-price,
+        .cart-subtotal {
+            font-size: 1.08rem;
+            font-weight: 500;
+            color: var(--secundario);
+        }
+        .cart-cantidad {
+            width: 60px;
+            transition: box-shadow .15s;
+        }
+        .cart-cantidad.changed {
+            box-shadow: 0 0 8px 1px var(--primario);
+            border-color: var(--primario);
+        }
+        .cart-remove {
+            color: var(--danger);
+            font-size: 1.6rem;
             cursor: pointer;
+            transition: color 0.16s;
         }
-
-        #carrito-scroll {
-            max-height: 400px;
-            overflow-y: auto;
+        .cart-remove:hover {
+            color: #d32f2f;
+            transform: scale(1.15);
+        }
+        .cart-total {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--oscuro);
+            padding-right: 1.5rem;
+            padding-top: .5rem;
+            text-align: right;
+        }
+        .btn-primary, .btn-danger, .btn-outline-danger {
+            border-radius: 1rem !important;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: transform 0.16s cubic-bezier(.38,1.15,.3,1), box-shadow 0.13s;
+        }
+        .btn-primary {
+            background-color: var(--primario);
+            border: none;
+            box-shadow: 0 2px 8px rgba(4, 52, 61, 0.09);
+            padding: 0.7rem 2rem;
+        }
+        .btn-primary:hover, .btn-primary:focus {
+            background-color: var(--oscuro);
+            color: #fff;
+            transform: scale(1.04) perspective(120px) translateZ(10px);
+        }
+        .btn-danger, .btn-outline-danger {
+            border: none;
+        }
+        .btn-outline-danger {
+            color: var(--danger);
+            background: transparent;
+            border: 1.5px solid var(--danger);
+            margin-right: .7rem;
+        }
+        .btn-outline-danger:hover {
+            background: var(--danger);
+            color: #fff;
+        }
+        /* Responsive */
+        @media (max-width: 600px) {
+            .cart-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            .cart-total { padding-right: 0; }
+        }
+        footer {
+            background-color: #007481;
+            color: white;
+            font-family: 'Amatic SC', cursive;
+            padding: 40px 20px;
+        }
+        .footer-text, a {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: white;
+        }
+        .footer-highlight {
+            background-color: #ccc;
+            color: black;
+            padding: 0 4px;
         }
     </style>
 </head>
-
 <body>
     <!-- Header -->
     <header class="bg-white border-bottom py-3">
         <div class="container d-flex justify-content-between align-items-center">
-
-            <!-- Logo -->
-            <a href="index.html" style="cursor: pointer;"> <img src="Logo_Wasipet2.png" alt="WASIPET"
-                    class="wasipet-logo mx-auto d-block"></a>
-
-            <!-- Icons -->
+            <a href="index.html" style="cursor: pointer;">
+                <img src="Logo_Wasipet2.png" alt="WASIPET" class="wasipet-logo mx-auto d-block">
+            </a>
             <div class="d-flex align-items-center gap-3">
                 <i class="fas fa-search" id="searchToggle" style="cursor: pointer;"></i>
                 <i class="fas fa-user" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#loginModal"></i>
@@ -98,31 +178,13 @@
                 </a>
             </div>
         </div>
-
-        <!-- buscador -->
-        <div class="container position-relative" id="searchContainer" style="display: none;">
-            <div class="bg-light p-3 rounded shadow position-absolute top-100 start-50 translate-middle-x w-100 z-3"
-                style="max-width: 600px;">
-                <div class="d-flex align-items-center">
-                    <input type="text" class="form-control me-2" placeholder="Buscar productos...">
-                    <button class="btn btn-outline-secondary" id="closeSearch"><i class="fas fa-times"></i></button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm sticky-top">
             <div class="container">
-
-                <!-- Botón hamburguesa -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
-                <!-- Enlaces -->
                 <div class="collapse navbar-collapse" id="navbarContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <!-- Productos -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="productosDropdown" role="button"
                                 data-bs-toggle="dropdown">
@@ -168,211 +230,206 @@
         </div>
     </div>
 
-    <div class="container py-5">
-        <h2 class="mb-4">Carrito de Compras</h2>
-        <div id="carrito-scroll">
-            <div id="carrito-container"></div>
+    <div class="container py-5" style="max-width:900px;">
+        <div class="cart-title">Carrito de Compras</div>
+        <div class="text-end mb-2">
+            <button id="btn-vaciar" class="btn btn-outline-danger" type="button">
+                <i class="bi bi-trash3 me-1"></i> Vaciar carrito
+            </button>
         </div>
-
-        <div class="mt-4 d-flex justify-content-end">
-            <span class="total">Total: S/ <span id="total">0.00</span></span>
-        </div>
-
+        <div id="carrito-contenido"></div>
+        <div class="cart-total" id="cart-total"></div>
         <div class="text-end mt-4">
             <a href="checkout.html" class="btn btn-primary btn-lg">
                 Ir al Pago
-                <i class="fas fa-credit-card ms-2"></i>
+                <i class="bi bi-credit-card ms-2"></i>
             </a>
         </div>
-
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Footer -->
+    <div>
+        <img src="https://cdn.shopify.com/s/files/1/0648/5137/8427/files/footer-pets-trans-naturo.png?v=1657827618"
+            alt="" class="img-fluid d-block mx-auto">
+        <footer>
+            <div class="text-center mb-4">
+                <h2 class="fs-1">10% OFF EN TU PRIMERA COMPRA</h2>
+                <p class="fw-bold text-white" style="font-family: Arial, sans-serif;">Suscríbete y recibe un código por
+                    10% OFF para tu primera compra</p>
+                <form class="d-flex justify-content-center flex-wrap gap-2 mt-3">
+                    <input type="email" placeholder="Email" class="form-control w-auto" style="min-width: 250px;">
+                    <button class="btn btn-danger">REGISTRAR</button>
+                </form>
+            </div>
+            <hr class="border-white">
+            <div class="container text-start">
+                <div class="row gy-4">
+                    <div class="col-md-3">
+                        <h5 class="mb-3">WASIPET</h5>
+                        <p class="footer-text">
+                            Creamos alimentos <span class="footer-highlight">NATURALES</span> de
+                            <span class="footer-highlight">ALTA CALIDAD</span> para perros y gatos.
+                            Desarrollado por destacados <span class="footer-highlight">NUTRICIONISTAS</span>,
+                            nuestra gama de alimentos naturales para mascotas satisface las
+                            <span class="footer-highlight">NECESIDADES NUTRICIONALES</span> de su mascota.
+                        </p>
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="mb-3">ATENCIÓN AL CLIENTE</h5>
+                        <ul class="list-unstyled footer-text">
+                            <a href="PreguntasFrecuentes.html">Preguntas frecuentes</a>
+                            <li>Puntos de venta</li>
+                            <a href="contacto.html">Contacto</a>
+                        </ul>
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="mb-3">LEGAL</h5>
+                        <ul class="list-unstyled footer-text">
+                            <a href="PoliticaDeEnvios.html">Política de envíos</a>
+                            <a href="PoliticaDePrivacidad.html">Política de privacidad</a>
+                        </ul>
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="mb-3">SÍGUENOS</h5>
+                        <div class="d-flex align-items-center gap-3">
+                            <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" width="24">
+                            <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram"
+                                width="24">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        //header y footer
-        window.addEventListener('DOMContentLoaded', () => {
-            fetch('footer.html')
-                .then(res => res.text())
-                .then(data => document.getElementById('footer').innerHTML = data);
-        });
-document.addEventListener('DOMContentLoaded', function () {
-            const loginForm = document.querySelector('#loginModal form');
-            const emailInput = document.getElementById('email');
-            const passwordInput = document.getElementById('password');
+    function actualizarContadorCarrito() {
+        let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+        const contador = document.getElementById("contador-carrito");
+        const cantidad = carrito.reduce((acc, p) => acc + (p.cantidad || 1), 0);
+        contador.textContent = cantidad;
+    }
 
-            loginForm.addEventListener('submit', function (e) {
-                e.preventDefault();
+    function animarEliminacion(element, callback) {
+        element.classList.add("removing");
+        setTimeout(() => {
+            callback();
+        }, 480);
+    }
 
-                const email = emailInput.value;
-                const password = passwordInput.value;
-
-                // Usuario simulado
-                const usuarios = [
-                    { email: 'admin@wasipet.com', password: '123456', nombre: 'Administrador' },
-                    { email: 'cliente@wasipet.com', password: 'wasipet', nombre: 'Cliente' }
-                ];
-
-                const usuario = usuarios.find(u => u.email === email && u.password === password);
-
-                if (usuario) {
-                    // Guardar en localStorage que está logueado
-                    localStorage.setItem('usuarioLogueado', JSON.stringify(usuario));
-                    alert(`Bienvenido, ${usuario.nombre}`);
-                    location.reload();
-                } else {
-                    alert('Correo o contraseña incorrectos');
-                }
-            });
-
-            // Mostrar el nombre del usuario si está logueado
-            const iconUser = document.querySelector('.fa-user');
-            const usuarioGuardado = JSON.parse(localStorage.getItem('usuarioLogueado'));
-
-            if (usuarioGuardado) {
-                iconUser.title = usuarioGuardado.nombre;
-                iconUser.classList.add('text-success'); // ícono verde para indicar sesión activa
+    function cargarCarrito() {
+        let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+        const productosAgrupados = {};
+        carrito.forEach(item => {
+            if (productosAgrupados[item.id]) {
+                productosAgrupados[item.id].cantidad += item.cantidad || 1;
+            } else {
+                productosAgrupados[item.id] = {...item, cantidad: item.cantidad || 1};
             }
-
-            // Permitir cerrar sesión al hacer clic
-            iconUser.addEventListener('click', function () {
-                if (usuarioGuardado) {
-                    if (confirm('¿Cerrar sesión?')) {
-                        localStorage.removeItem('usuarioLogueado');
-                        location.reload();
-                    }
-                }
-            });
         });
-        
-        function cargarCarrito() {
-            let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+        const productos = Object.values(productosAgrupados);
 
-            // Agrupar productos por ID
-            const productosAgrupados = {};
-            carrito.forEach(item => {
-                if (productosAgrupados[item.id]) {
-                    productosAgrupados[item.id].cantidad += item.cantidad;
-                } else {
-                    productosAgrupados[item.id] = { ...item };
-                }
-            });
+        const cont = document.getElementById("carrito-contenido");
+        const totalCont = document.getElementById("cart-total");
+        cont.innerHTML = '';
+        let total = 0;
 
-            const container = document.getElementById("carrito-container");
-            const totalElement = document.getElementById("total");
-            container.innerHTML = "";
-            let total = 0;
-
-            const productos = Object.values(productosAgrupados);
-
-            if (productos.length === 0) {
-                container.innerHTML = `<p class="text-center">Tu carrito está vacío.</p>`;
-                totalElement.textContent = "0.00";
-                return;
-            }
-
-            productos.forEach((item, index) => {
-                const subtotal = parseFloat(item.precio) * item.cantidad;
-                total += subtotal;
-
-                const card = document.createElement("div");
-                card.className = "card mb-3";
-                card.innerHTML = `
-          <div class="row g-0 align-items-center p-3">
-            <div class="col-md-2 text-center">
-              <img src="${item.imagen}" class="producto-img rounded">
-            </div>
-            <div class="col-md-4">
-              <h5>${item.nombre}</h5>
-              <p class="mb-0 text-muted">Precio: S/ ${parseFloat(item.precio).toFixed(2)}</p>
-            </div>
-            <div class="col-md-2">
-              <input type="number" min="1" value="${item.cantidad}" class="form-control cantidad-input" data-id="${item.id}">
-            </div>
-            <div class="col-md-2 text-center">
-              <span class="subtotal">S/ ${subtotal.toFixed(2)}</span>
-            </div>
-            <div class="col-md-2 text-end">
-              <span class="btn-eliminar" data-id="${item.id}">&times;</span>
-            </div>
-          </div>
-        `;
-                container.appendChild(card);
-            });
-
-            totalElement.textContent = total.toFixed(2);
-            actualizarTotalModal(total);  // Actualizar el total en el modal
-            agregarEventosCantidad(productos);
-            agregarEventosEliminar(productos);
+        if (productos.length === 0) {
+            cont.innerHTML = `<div class="text-center py-5 text-muted" style="font-size:1.2rem;">Tu carrito está vacío <i class="bi bi-cart-x"></i></div>`;
+            totalCont.innerHTML = '';
+            actualizarContadorCarrito();
+            return;
         }
 
-        // Actualizar el total en el modal
-        function actualizarTotalModal(total) {
-            document.getElementById("montoTotal").innerText = total.toFixed(2);
-        }
+        productos.forEach(producto => {
+            const subtotal = producto.cantidad * parseFloat(producto.precio);
+            total += subtotal;
 
-        function agregarEventosCantidad(productos) {
-            const inputs = document.querySelectorAll(".cantidad-input");
-            inputs.forEach(input => {
-                input.addEventListener("change", () => {
-                    const id = input.dataset.id;
-                    const nuevaCantidad = parseInt(input.value) || 1;
+            const card = document.createElement("div");
+            card.className = "cart-3d cart-item";
+            card.innerHTML = `
+                <img src="${producto.imagen || 'https://placehold.co/80x80'}" class="cart-img" alt="${producto.nombre}">
+                <div>
+                    <div class="cart-name">${producto.nombre}</div>
+                    <div class="cart-price">S/ ${parseFloat(producto.precio).toFixed(2)}</div>
+                </div>
+                <input type="number" min="1" value="${producto.cantidad}" class="form-control cart-cantidad ms-auto me-2" style="max-width:80px;" data-id="${producto.id}">
+                <div class="cart-subtotal ms-2">Subtotal: S/ ${(subtotal).toFixed(2)}</div>
+                <span class="cart-remove ms-3" title="Eliminar" data-id="${producto.id}">&times;</span>
+            `;
+            cont.appendChild(card);
+        });
 
-                    // Actualizar en el localStorage
-                    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-                    carrito = carrito.map(p => {
-                        if (p.id === id) {
-                            return { ...p, cantidad: nuevaCantidad };
-                        }
-                        return p;
-                    });
+        totalCont.innerHTML = `Total: S/ ${total.toFixed(2)}`;
+        actualizarContadorCarrito();
+        agregarEventosCantidad();
+        agregarEventosEliminar();
+    }
 
-                    localStorage.setItem("carrito", JSON.stringify(carrito));
-                    cargarCarrito();
+    function agregarEventosCantidad() {
+        document.querySelectorAll('.cart-cantidad').forEach(input => {
+            input.addEventListener('change', () => {
+                let id = input.dataset.id;
+                let cantidad = Math.max(1, parseInt(input.value) || 1);
+
+                // animación
+                input.classList.add('changed');
+                setTimeout(()=>input.classList.remove('changed'), 350);
+
+                let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+                carrito = carrito.map(p => {
+                    if (p.id === id) return {...p, cantidad: cantidad};
+                    return p;
                 });
+                localStorage.setItem("carrito", JSON.stringify(carrito));
+                cargarCarrito();
             });
-        }
+        });
+    }
 
-        function agregarEventosEliminar(productos) {
-            const botonesEliminar = document.querySelectorAll(".btn-eliminar");
-            botonesEliminar.forEach(boton => {
-                boton.addEventListener("click", () => {
-                    const id = boton.dataset.id;
-
-                    // Eliminar todos los elementos con ese ID
+    function agregarEventosEliminar() {
+        document.querySelectorAll('.cart-remove').forEach(btn => {
+            btn.addEventListener('click', () => {
+                let id = btn.dataset.id;
+                let card = btn.closest('.cart-3d');
+                animarEliminacion(card, () => {
                     let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
                     carrito = carrito.filter(item => item.id !== id);
                     localStorage.setItem("carrito", JSON.stringify(carrito));
                     cargarCarrito();
                 });
             });
-        }
+        });
+    }
 
+    // Vaciar carrito (con animación y confirmación)
+    document.addEventListener("DOMContentLoaded", () => {
         cargarCarrito();
 
-        document.getElementById("btnHacerPago").addEventListener("click", function () {
-            // Vaciar el carrito en localStorage
-            localStorage.removeItem("carrito");
-
-            // Mostrar la alerta de pago exitoso
-            alert("✅ PAGO EXITOSO\n¡Gracias por tu compra!");
-
-            // Cierra el modal
-            const modal = bootstrap.Modal.getInstance(document.getElementById('modalPago'));
-            modal.hide();
-
-            // Recargar la página para actualizar el carrito
-            cargarCarrito();
+        const btnVaciar = document.getElementById("btn-vaciar");
+        btnVaciar.addEventListener('click', () => {
+            if (confirm("¿Seguro que deseas vaciar todo el carrito?")) {
+                // animación de fadeout a todos
+                document.querySelectorAll('.cart-3d').forEach((card, i) => {
+                    setTimeout(()=> card.classList.add('removing'), i*80);
+                });
+                setTimeout(() => {
+                    localStorage.removeItem("carrito");
+                    cargarCarrito();
+                }, 600);
+            }
         });
 
-        // Si manejas el total del carrito, actualiza el monto:
-        document.addEventListener("DOMContentLoaded", () => {
-            const monto = localStorage.getItem('total') || '0.00';
-            document.getElementById("montoTotal").innerText = parseFloat(monto).toFixed(2);
-        });
+        // Demo login, ignóralo si tienes tu propio flujo
+        const loginForm = document.querySelector('#loginModal form');
+        if (loginForm) {
+            loginForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                alert('Demo login.');
+            });
+        }
+    });
     </script>
-    <div id="footer"></div>
-
 </body>
-
 </html>
