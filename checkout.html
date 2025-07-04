@@ -151,6 +151,17 @@
             color: black;
             padding: 0 4px;
         }
+        @media print {
+        body *:not(#boleta-pago):not(#boleta-pago *) {
+            display: none !important;
+        }
+        #boleta-pago {
+            display: block !important;
+            margin: 0 !important;
+            box-shadow: none !important;
+        }
+        }
+
     </style>
 </head>
 <body>
@@ -302,6 +313,30 @@
                     <h4 class="mt-3">¡Pedido realizado con éxito!</h4>
                     <p class="text-muted">Hemos recibido tu pedido.</p>
                     <div id="detalle-confirmacion" class="text-start mt-3"></div>
+                    <!-- Boleta de Pago -->
+                    <div id="boleta-pago" class="mt-4 p-3" style="
+                        background:#fff;
+                        border:1px solid #ccc;
+                        border-radius:1rem;
+                        max-width:360px;
+                        margin:1rem auto 0;
+                        font-family:Courier,monospace;
+                        display:none;
+                    ">
+                    <h4 style="text-align:center;color:var(--primario);margin-bottom:0.5rem;">BOLETA DE PAGO</h4>
+                    <p style="font-size:0.85rem;margin:0;text-align:center;">WASIPET S.A.C.</p>
+                    <hr style="border:dashed 1px var(--secundario);margin:0.5rem 0;">
+                    <div id="boleta-contenido"><!-- aquí van los items --></div>
+                    <hr style="border:dashed 1px var(--secundario);margin:0.5rem 0;">
+                    <p style="display:flex;justify-content:space-between;font-weight:600;margin:0.3rem 0;">
+                        <span>Total</span>
+                        <span id="boleta-total" style="color:var(--primario);"></span>
+                    </p>
+                    <button id="btn-print-boleta" class="btn btn-success w-100" style="border-radius:0.6rem;font-size:0.9rem; margin-top:0.8rem;">
+                        Imprimir boleta
+                    </button>
+                    </div>
+
                     <button class="btn btn-primary mt-4" data-bs-dismiss="modal">Aceptar</button>
                 </div>
             </div>
@@ -519,6 +554,33 @@ document.addEventListener("DOMContentLoaded", () => {
                 `;
                 const modal = new bootstrap.Modal(document.getElementById("confirmacionModal"));
                 modal.show();
+                // 1) Generar contenido de la boleta
+                const boleta = document.getElementById('boleta-pago');
+                const contenido = document.getElementById('boleta-contenido');
+                contenido.innerHTML = '';  // limpia
+
+                productos.forEach(item => {
+                const subtotal = (item.cantidad * parseFloat(item.precio)).toFixed(2);
+                const linea = document.createElement('p');
+                linea.style.display = 'flex';
+                linea.style.justifyContent = 'space-between';
+                linea.style.margin = '0.2rem 0';
+                linea.innerHTML = `
+                    <span>${item.nombre} x${item.cantidad}</span>
+                    <span>S/ ${subtotal}</span>
+                `;
+                contenido.appendChild(linea);
+                });
+
+                // 2) Total
+                document.getElementById('boleta-total').textContent = `S/ ${total.toFixed(2)}`;
+
+                // 3) Mostrar boleta
+                boleta.style.display = 'block';
+
+                // 4) Imprimir boleta al hacer click
+                document.getElementById('btn-print-boleta').onclick = () => window.print();
+
                 localStorage.removeItem("carrito");
                 if (typeof actualizarContadorCarrito === "function") {
                     actualizarContadorCarrito();
