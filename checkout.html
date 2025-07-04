@@ -346,7 +346,21 @@
                 resumen.innerHTML = '<p class="text-muted">Tu carrito está vacío.</p>';
             } else {
                 resumen.innerHTML = ''; // Limpiar antes de insertar
-                carrito.forEach(p => {
+                // Revisar estructura de carrito para debug
+                console.log("Carrito desde localStorage:", carrito);
+                // Agrupar productos por id para evitar duplicados (igual que en carrito.html)
+                const productosAgrupados = {};
+                carrito.forEach(item => {
+                    if(productosAgrupados[item.id]){
+                        productosAgrupados[item.id].cantidad += item.cantidad;
+                    } else {
+                        productosAgrupados[item.id] = {...item};
+                    }
+                });
+                const productos = Object.values(productosAgrupados);
+                productos.forEach(p => {
+                    // Revisar propiedades de cada producto para debug
+                    console.log("Producto en carrito agrupado:", p);
                     if(p && p.nombre && p.cantidad && p.precio){
                         const subtotal = p.cantidad * parseFloat(p.precio);
                         total += subtotal;
