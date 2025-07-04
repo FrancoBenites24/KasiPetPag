@@ -332,7 +332,14 @@
             const form = document.getElementById("formCheckout");
             const detalleConfirmacion = document.getElementById("detalle-confirmacion");
             
-            const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+            // Intentar obtener carrito desde localStorage
+            let carrito = [];
+            try {
+                carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+            } catch (error) {
+                console.error("Error al parsear carrito desde localStorage:", error);
+                carrito = [];
+            }
             let total = 0;
 
             if (!carrito || carrito.length === 0) {
