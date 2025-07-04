@@ -335,18 +335,20 @@
             const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
             let total = 0;
 
-            if (carrito.length === 0) {
+            if (!carrito || carrito.length === 0) {
                 resumen.innerHTML = '<p class="text-muted">Tu carrito está vacío.</p>';
             } else {
                 resumen.innerHTML = ''; // Limpiar antes de insertar
                 carrito.forEach(p => {
-                    const subtotal = p.cantidad * parseFloat(p.precio);
-                    total += subtotal;
-                    resumen.innerHTML += `
-            <div class="d-flex justify-content-between mb-2">
-              <span>${p.nombre} x${p.cantidad}</span>
-              <span>S/ ${subtotal.toFixed(2)}</span>
-            </div>`;
+                    if(p && p.nombre && p.cantidad && p.precio){
+                        const subtotal = p.cantidad * parseFloat(p.precio);
+                        total += subtotal;
+                        resumen.innerHTML += `
+                <div class="d-flex justify-content-between mb-2">
+                  <span>${p.nombre} x${p.cantidad}</span>
+                  <span>S/ ${subtotal.toFixed(2)}</span>
+                </div>`;
+                    }
                 });
                 totalSpan.textContent = total.toFixed(2);
             }
